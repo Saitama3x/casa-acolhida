@@ -1,0 +1,31 @@
+// routes/vagas.js
+const express = require('express');
+const Vaga = require('../models/Vaga');
+const jwt = require('jsonwebtoken');
+
+const router = express.Router();
+
+// Middleware de autenticação
+const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).send('Token não fornecido');
+  try {
+    const decoded = jwt.verify(token, 'secreto');
+    req.userId = decoded.id;
+    next();
+  } catch {
+    return res.status(401).send('Token inválido');
+  }
+};
+
+// Listar vagas
+router.get('/vagas', authMiddleware, async (req, res) => {
+  try {
+    const vagas = await Vaga.find();
+    res.json(vagas);
+  } catch (err) {
+    res.status(500).send('Erro ao carregar vagas');
+  }
+});
+
+module.exports = router;
