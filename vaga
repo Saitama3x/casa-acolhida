@@ -1,0 +1,10 @@
+// models/Vaga.js
+const mongoose = require('mongoose');
+
+const vagaSchema = new mongoose.Schema({
+  nome: { type: String, required: true },
+  capacidade: { type: Number, required: true },
+  ocupacaoAtual: { type: Number, default: 0 },
+});
+
+module.exports = mongoose.model('Vaga', vagaSchema);
